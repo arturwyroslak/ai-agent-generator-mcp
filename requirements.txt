@@ -1,5 +1,6 @@
 # MCP Server dependencies
-mcp>=1.0.0
+mcp>=1.13.0
+smithery>=0.1.23
 
 # Python standard library dependencies are included
 # asyncio, json, typing, uuid, datetime, base64, re, math

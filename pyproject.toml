@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=45", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.8.15,<0.9.0"]
+build-backend = "uv_build"
 
 [project]
 name = "ai-agent-generator-mcp"
@@ -9,9 +9,10 @@ description = "MCP Server that enables AI to create other AI agents through natu
 authors = [{name = "AI Agent Generator MCP", email = "contact@example.com"}]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 dependencies = [
-    "mcp>=1.0.0",
+    "mcp>=1.13.0",
+    "smithery>=0.1.23",
 ]
 
 [project.urls]
@@ -19,4 +20,9 @@ Homepage = "https://github.com/arturwyroslak/ai-agent-generator-mcp"
 Repository = "https://github.com/arturwyroslak/ai-agent-generator-mcp"
 
 [project.scripts]
-ai-agent-generator-mcp = "src.server:main"
+dev = "smithery.cli.dev:main"
+playground = "smithery.cli.playground:main"
+
+# Points to your server function
+[tool.smithery]
+server = "src.server:create_server"
