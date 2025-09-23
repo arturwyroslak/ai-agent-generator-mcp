@@ -226,10 +226,20 @@ class EnhancedAgentManager:
                 "download_ready": True,
                 "filename": chat_interface["filename"],
                 "download_base64": chat_interface["download_base64"],
+                "file_path": chat_interface.get("file_path"),
+                "file_url": chat_interface.get("file_url"),
+                "download_link": chat_interface.get("download_link"),
+                "file_saved": chat_interface.get("file_saved", False),
                 "features": chat_interface["features"],
-                "message": "Interfejs chatu HTML gotowy do pobrania i testów!"
+                "message": "Interfejs chatu HTML gotowy do pobrania i testów!" + 
+                          (f" Dostępny pod linkiem: {chat_interface.get('download_link', 'N/A')}" 
+                           if chat_interface.get("file_saved") else "")
             }
-            print(f"🎉 KOMPLETNY AGENT GOTOWY! Nazwa pliku: {chat_interface['filename']}")
+            if chat_interface.get("file_saved"):
+                print(f"🎉 KOMPLETNY AGENT GOTOWY! Plik zapisany: {chat_interface['filename']}")
+                print(f"🔗 Link do pobrania: {chat_interface.get('download_link', 'N/A')}")
+            else:
+                print(f"🎉 KOMPLETNY AGENT GOTOWY! Nazwa pliku: {chat_interface['filename']}")
         else:
             result["chat_interface"] = {
                 "generated": False,

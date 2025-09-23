@@ -1,6 +1,7 @@
 import json
 import uuid
 import base64
+import os
 from typing import Dict, Any
 from datetime import datetime
 
@@ -293,11 +294,36 @@ class AgentDeployer:
         
         html_base64 = base64.b64encode(html_content.encode('utf-8')).decode()
         
+        # Generate filename and save the file
+        filename = f"agent_chat_{agent_name.replace(' ', '_').lower()}_{agent_id[:8]}.html"
+        
+        # Save the HTML file to current directory (root of repository)
+        # This makes it accessible for download
+        file_path = os.path.join(os.getcwd(), filename)
+        
+        try:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            file_saved = True
+            file_url = f"file://{file_path}"
+            # For web access, create a relative path from repository root
+            relative_path = os.path.relpath(file_path, os.getcwd())
+            download_link = f"./{relative_path}"
+        except Exception as e:
+            print(f"⚠️ Could not save HTML file: {e}")
+            file_saved = False
+            file_url = None
+            download_link = None
+        
         return {
             "success": True,
             "html_content": html_content,
             "download_base64": html_base64,
-            "filename": f"agent_chat_{agent_name.replace(' ', '_').lower()}_{agent_id[:8]}.html",
+            "filename": filename,
+            "file_path": file_path if file_saved else None,
+            "file_url": file_url if file_saved else None,
+            "download_link": download_link if file_saved else None,
+            "file_saved": file_saved,
             "theme": theme,
             "agent_type": agent_type,
             "features": [
@@ -308,7 +334,8 @@ class AgentDeployer:
                 "Quick actions",
                 "Agent-specific responses",
                 "Modern animations",
-                "Mobile-friendly"
+                "Mobile-friendly",
+                "Direct file access" if file_saved else "Base64 download only"
             ]
         }
         
