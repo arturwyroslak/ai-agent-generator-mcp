@@ -1,5 +1,23 @@
+import sys
+import os
 from typing import Dict, Any, List
-from ..components import get_all_available_components, search_components
+
+# Add the src directory to the path for absolute imports
+current_dir = os.path.dirname(__file__)
+src_dir = os.path.dirname(current_dir)
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
+
+try:
+    from components import get_all_available_components, search_components
+except ImportError as e:
+    print(f"Warning: Could not import components: {e}")
+    
+    def get_all_available_components():
+        return {}
+    
+    def search_components(query, category=None):
+        return []
 
 class ComponentManager:
     def __init__(self):

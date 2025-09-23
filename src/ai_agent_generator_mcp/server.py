@@ -21,11 +21,19 @@ def create_server():
     server = FastMCP(name="AI Agent Generator MCP")
     
     # Simplified imports to avoid circular dependencies
+    # Add the src directory to sys.path for absolute imports
+    import sys
+    import os
+    current_dir = os.path.dirname(__file__)
+    src_dir = os.path.dirname(os.path.dirname(current_dir))
+    if src_dir not in sys.path:
+        sys.path.insert(0, src_dir)
+    
     try:
-        from ..tools.enhanced_agent_manager import EnhancedAgentManager
-        from ..tools.component_manager import ComponentManager  
-        from ..tools.workflow_manager import WorkflowManager
-        from ..tools.deployer import AgentDeployer
+        from tools.enhanced_agent_manager import EnhancedAgentManager
+        from tools.component_manager import ComponentManager  
+        from tools.workflow_manager import WorkflowManager
+        from tools.deployer import AgentDeployer
         
         agent_manager = EnhancedAgentManager()
         component_manager = ComponentManager()
