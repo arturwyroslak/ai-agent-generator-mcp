@@ -104,7 +104,33 @@ class DescriptionAnalyzer:
         # Insights specyficzne dla domeny
         analysis['domain_specific_insights'] = self._get_domain_insights(domain, text)
         
-        return analysis
+        # Auto-detect domain and complexity
+        detected_domain = self._detect_domain_from_description(text)
+        detected_complexity = self._calculate_complexity_level(analysis['complexity_score'])
+        
+        # Generate suggested components based on patterns
+        suggested_components = self._suggest_components_for_patterns(analysis['detected_patterns'], text)
+        analysis['suggested_components'] = suggested_components
+        
+        # Create enhanced analysis structure expected by create_agent
+        return {
+            'detected_patterns': analysis['detected_patterns'],
+            'implicit_requirements': self._format_implicit_requirements(analysis['implicit_requirements'], analysis['detected_patterns'], text),
+            'complexity_score': analysis['complexity_score'],
+            'urgency_score': analysis['urgency_score'],
+            'suggested_components': suggested_components,
+            'workflow_patterns': analysis['workflow_patterns'],
+            'domain_specific_insights': analysis['domain_specific_insights'],
+            'technical_keywords': analysis['technical_keywords'],
+            'business_keywords': analysis['business_keywords'],
+            'enhanced_analysis': {
+                'detected_domain': detected_domain,
+                'complexity_level': detected_complexity,
+                'confidence_score': self._calculate_confidence_score(analysis['detected_patterns'], text)
+            },
+            'smart_suggestions': suggested_components,
+            'io_requirements': self._detect_io_requirements(text, analysis['detected_patterns'])
+        }
     
     def _extract_implicit_requirements(self, patterns: List[str], text: str) -> List[str]:
         """Wykrywa ukryte wymagania na podstawie wzorców"""
@@ -234,6 +260,211 @@ class DescriptionAnalyzer:
             insights['recommended_features'] = domain_info['features']
         
         return insights
+    
+    def _detect_domain_from_description(self, text: str) -> str:
+        """Wykrywa domenę na podstawie treści opisu"""
+        
+        # Email/Communication domain
+        if any(word in text for word in ['email', 'mail', 'poczta', 'wiadomość', 'newsletter', 'smtp', 'imap']):
+            return 'communication'
+        
+        # E-commerce domain  
+        if any(word in text for word in ['shop', 'sklep', 'product', 'produkt', 'order', 'zamówienie', 'payment', 'płatność']):
+            return 'ecommerce'
+            
+        # Customer service domain
+        if any(word in text for word in ['support', 'wsparcie', 'help', 'pomoc', 'ticket', 'chat', 'customer', 'klient']):
+            return 'customer_service'
+            
+        # Sales domain
+        if any(word in text for word in ['sales', 'sprzedaż', 'lead', 'crm', 'deal', 'kontrakt', 'offer', 'oferta']):
+            return 'sales'
+            
+        # Marketing domain
+        if any(word in text for word in ['marketing', 'campaign', 'kampania', 'social', 'analytics', 'tracking']):
+            return 'marketing'
+            
+        # Finance domain
+        if any(word in text for word in ['finance', 'finanse', 'invoice', 'faktura', 'payment', 'accounting', 'księgowość']):
+            return 'finance'
+            
+        return 'general'
+    
+    def _calculate_complexity_level(self, complexity_score: int) -> str:
+        """Oblicza poziom złożoności na podstawie wyniku"""
+        if complexity_score >= 7:
+            return 'complex'
+        elif complexity_score >= 4:
+            return 'medium'
+        else:
+            return 'simple'
+    
+    def _calculate_confidence_score(self, detected_patterns: List[str], text: str) -> int:
+        """Oblicza poziom pewności analizy"""
+        base_score = 50
+        
+        # Add points for each detected pattern
+        pattern_score = len(detected_patterns) * 10
+        
+        # Add points for specific keywords
+        keyword_matches = 0
+        all_keywords = ['email', 'mail', 'automation', 'integration', 'api', 'workflow', 'process']
+        for keyword in all_keywords:
+            if keyword in text:
+                keyword_matches += 1
+        
+        keyword_score = keyword_matches * 5
+        
+        total_score = min(95, base_score + pattern_score + keyword_score)
+        return max(60, total_score)  # Minimum 60% confidence
+    
+    def _suggest_components_for_patterns(self, patterns: List[str], text: str) -> List[Dict[str, Any]]:
+        """Sugeruje komponenty na podstawie wykrytych wzorców"""
+        suggestions = []
+        
+        # Email/Communication components
+        if 'communication' in patterns or any(word in text for word in ['email', 'mail', 'poczta', 'śledzenie', 'tracking']):
+            suggestions.extend([
+                {
+                    'component_id': 'gmail_integration',
+                    'reason': 'Wykryto potrzebę obsługi poczty Gmail',
+                    'confidence': 90
+                },
+                {
+                    'component_id': 'outlook_integration', 
+                    'reason': 'Wykryto potrzebę obsługi poczty Outlook',
+                    'confidence': 85
+                },
+                {
+                    'component_id': 'sendgrid_integration',
+                    'reason': 'Wykryto potrzebę masowego wysyłania emaili',
+                    'confidence': 80
+                },
+                {
+                    'component_id': 'email_template_manager',
+                    'reason': 'Wykryto potrzebę zarządzania szablonami emaili',
+                    'confidence': 85
+                }
+            ])
+        
+        # User interaction components
+        if 'user_interaction' in patterns:
+            suggestions.extend([
+                {
+                    'component_id': 'llm_text_generator',
+                    'reason': 'Wykryto potrzebę generowania odpowiedzi',
+                    'confidence': 95
+                },
+                {
+                    'component_id': 'intent_classifier',
+                    'reason': 'Wykryto potrzebę klasyfikacji intencji użytkownika',
+                    'confidence': 85
+                }
+            ])
+        
+        # Automation components
+        if 'automation' in patterns:
+            suggestions.extend([
+                {
+                    'component_id': 'scheduler',
+                    'reason': 'Wykryto potrzebę automatyzacji procesów',
+                    'confidence': 90
+                },
+                {
+                    'component_id': 'workflow_engine',
+                    'reason': 'Wykryto potrzebę zarządzania przepływem pracy',
+                    'confidence': 85
+                }
+            ])
+        
+        # Data processing components
+        if 'data_processing' in patterns:
+            suggestions.extend([
+                {
+                    'component_id': 'data_validator',
+                    'reason': 'Wykryto potrzebę walidacji danych',
+                    'confidence': 80
+                },
+                {
+                    'component_id': 'data_transformer',
+                    'reason': 'Wykryto potrzebę przetwarzania danych',
+                    'confidence': 75
+                }
+            ])
+        
+        return suggestions
+    
+    def _format_implicit_requirements(self, requirements: List[str], patterns: List[str], text: str) -> List[Dict[str, Any]]:
+        """Formatuje ukryte wymagania do odpowiedniej struktury"""
+        formatted_requirements = []
+        
+        for req in requirements:
+            formatted_requirements.append({
+                'reasoning': req,
+                'confidence': 75,
+                'suggested_components': self._get_components_for_requirement(req)
+            })
+        
+        # Add email-specific requirements if email patterns detected
+        if 'communication' in patterns or any(word in text for word in ['email', 'mail', 'poczta']):
+            formatted_requirements.extend([
+                {
+                    'reasoning': 'Agent do obsługi poczty wymaga integracji SMTP/IMAP',
+                    'confidence': 95,
+                    'suggested_components': ['gmail_integration', 'outlook_integration', 'sendgrid_integration']
+                },
+                {
+                    'reasoning': 'Konieczne jest śledzenie statusu dostarczenia emaili',
+                    'confidence': 85,
+                    'suggested_components': ['email_tracker', 'delivery_monitor']
+                },
+                {
+                    'reasoning': 'Potrzeba automatycznego przetwarzania przychodzących wiadomości',
+                    'confidence': 90,
+                    'suggested_components': ['email_parser', 'auto_responder', 'priority_classifier']
+                }
+            ])
+        
+        return formatted_requirements
+    
+    def _get_components_for_requirement(self, requirement: str) -> List[str]:
+        """Zwraca komponenty dla danego wymagania"""
+        requirement_lower = requirement.lower()
+        
+        if 'template' in requirement_lower or 'personaliz' in requirement_lower:
+            return ['email_template_manager', 'personalization_engine']
+        elif 'tracking' in requirement_lower or 'delivery' in requirement_lower:
+            return ['email_tracker', 'delivery_monitor']
+        elif 'backup' in requirement_lower or 'recovery' in requirement_lower:
+            return ['data_backup', 'recovery_manager']
+        elif 'validation' in requirement_lower or 'security' in requirement_lower:
+            return ['data_validator', 'security_scanner']
+        elif 'monitor' in requirement_lower or 'logging' in requirement_lower:
+            return ['monitoring_agent', 'log_analyzer']
+        
+        return ['utility_helper']
+    
+    def _detect_io_requirements(self, text: str, patterns: List[str]) -> Dict[str, List[str]]:
+        """Wykrywa wymagania wejścia i wyjścia"""
+        inputs = ['user_message']
+        outputs = ['response']
+        
+        if 'communication' in patterns or 'email' in text:
+            inputs.extend(['email_content', 'recipient_list', 'subject'])
+            outputs.extend(['sent_confirmation', 'delivery_status', 'email_response'])
+        
+        if 'data_processing' in patterns:
+            inputs.extend(['data_file', 'parameters'])
+            outputs.extend(['processed_data', 'report'])
+        
+        if 'automation' in patterns:
+            inputs.extend(['trigger_event', 'schedule'])
+            outputs.extend(['execution_log', 'status_update'])
+        
+        return {
+            'inputs': list(set(inputs)),
+            'outputs': list(set(outputs))
+        }
 
 # Singleton instance
 _description_analyzer_instance = None

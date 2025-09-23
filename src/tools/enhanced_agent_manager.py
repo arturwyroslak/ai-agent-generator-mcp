@@ -4,9 +4,15 @@ import re
 from typing import Dict, Any, List, Optional
 import asyncio
 from datetime import datetime
-from ..components import get_all_available_components
-from ..utils.smart_context import get_smart_context
-from ..utils.description_analyzer import get_description_analyzer
+
+# Use absolute imports to avoid issues
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from components import get_all_available_components
+from utils.smart_context import get_smart_context
+from utils.description_analyzer import get_description_analyzer
 
 class EnhancedAgentManager:
     """Ulepszony AgentManager z inteligentną analizą i automatyczną optymalizacją działającą w tle"""
@@ -135,10 +141,30 @@ class EnhancedAgentManager:
         
         print(f"✨ Agent '{name}' utworzony z pełną inteligencją AI!")
         
-        return {
+        # === FAZA 9: AUTOMATYCZNE GENEROWANIE INTERFEJSU CHATU ===
+        print("💬 Faza 9: Automatyczne generowanie interfejsu chatu...")
+        chat_interface = None
+        try:
+            from .deployer import AgentDeployer
+            deployer = AgentDeployer()
+            chat_interface = await deployer.generate_chat_interface(agent_id, "modern")
+            print(f"✅ Interfejs chatu wygenerowany pomyślnie!")
+        except Exception as e:
+            print(f"⚠️ Nie udało się wygenerować interfejsu chatu: {e}")
+        
+        result = {
             "success": True,
             "agent_id": agent_id,
-            "message": f"Agent '{name}' został utworzony z zaawansowaną inteligencją AI",
+            "message": f"Agent '{name}' został utworzony z zaawansowaną inteligencją AI i gotowym interfejsem chatu",
+            "agent": {
+                "id": agent_id,
+                "name": name,
+                "description": description,
+                "domain": domain,
+                "complexity": complexity,
+                "components": auto_configured_components,
+                "status": "ready_to_deploy"
+            },
             "ai_enhancements": {
                 "detected_domain": detected_domain,
                 "detected_complexity": detected_complexity,
@@ -154,6 +180,25 @@ class EnhancedAgentManager:
             "next_steps": await self._generate_intelligent_next_steps(agent, enhanced_analysis),
             "estimated_performance": await self._estimate_agent_performance(agent)
         }
+        
+        # Add chat interface to result if successfully generated
+        if chat_interface and chat_interface.get("success"):
+            result["chat_interface"] = {
+                "generated": True,
+                "download_ready": True,
+                "filename": chat_interface["filename"],
+                "download_base64": chat_interface["download_base64"],
+                "features": chat_interface["features"],
+                "message": "Interfejs chatu HTML gotowy do pobrania i testów!"
+            }
+            print(f"🎉 KOMPLETNY AGENT GOTOWY! Nazwa pliku: {chat_interface['filename']}")
+        else:
+            result["chat_interface"] = {
+                "generated": False,
+                "message": "Interfejs chatu można wygenerować później używając narzędzia 'generate_chat_interface'"
+            }
+        
+        return result
     
     async def _intelligent_component_selection(self, description: str, domain: str, 
                                              complexity: str, analysis: Dict) -> List[Dict[str, Any]]:
@@ -1108,3 +1153,193 @@ class EnhancedAgentManager:
                 "ai_analysis": agent.get("ai_analysis", {})
             }
         }
+        
+    # === MISSING ESSENTIAL METHODS ===
+    
+    async def _auto_configure_all_components(self, components: List[Dict], domain: str, 
+                                           description: str, analysis: Dict) -> List[Dict]:
+        """Auto-konfiguruje wszystkie komponenty z AI intelligence"""
+        auto_configured = []
+        
+        for comp in components:
+            comp_id = comp["component_id"]
+            
+            # Pobierz info o komponencie 
+            comp_info = await self._get_component_info(comp_id)
+            if not comp_info:
+                # Fallback configuration
+                comp["configuration"] = {"auto_configured": True}
+                comp["auto_configured"] = True
+                auto_configured.append(comp)
+                continue
+            
+            # Smart configuration na podstawie typu komponenetu
+            if "llm" in comp_id or "ai" in comp_id:
+                config = await self._advanced_llm_configuration(description, domain, analysis)
+            elif "integration" in comp_id:
+                config = await self._smart_integration_config(comp_id, domain, description)
+            elif "classifier" in comp_id:
+                config = await self._smart_classifier_config(comp_id, domain, analysis)
+            elif "workflow" in comp_id or "control" in comp_id:
+                config = await self._smart_workflow_control_config(comp_id, analysis)
+            else:
+                # Default configuration
+                config = {
+                    "enabled": True,
+                    "timeout": 30,
+                    "auto_configured": True,
+                    "ai_optimized": True
+                }
+            
+            comp["configuration"] = config
+            comp["auto_configured"] = True
+            auto_configured.append(comp)
+            
+        print(f"⚙️ Auto-skonfigurowano {len(auto_configured)} komponentów")
+        return auto_configured
+    
+    async def _advanced_llm_configuration(self, description: str, domain: str, analysis: Dict) -> Dict[str, Any]:
+        """Zaawansowana konfiguracja LLM z AI optymalizacją"""
+        
+        confidence_score = analysis["enhanced_analysis"]["confidence_score"]
+        complexity = analysis["enhanced_analysis"]["complexity_level"]
+        
+        # Inteligentna konfiguracja na podstawie analizy
+        temperature = 0.7  # Default
+        max_tokens = 1000
+        
+        # Adjust temperature based on domain and complexity
+        if domain in ["finance", "legal"]:
+            temperature = 0.3  # More precise for sensitive domains
+        elif domain in ["creative", "marketing"]:
+            temperature = 0.9  # More creative
+        elif complexity == "complex":
+            temperature = 0.5  # Balanced for complex tasks
+            
+        # Adjust tokens based on detected patterns
+        if "communication" in analysis.get("detected_patterns", []):
+            max_tokens = 1500  # Longer responses for communication
+        
+        return {
+            "model": "pollinations_llm",
+            "provider": "pollinations",
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "confidence_threshold": confidence_score / 100,
+            "system_prompt": self._generate_system_prompt(domain, description),
+            "auto_configured": True,
+            "optimization_level": "ai_enhanced"
+        }
+    
+    def _generate_system_prompt(self, domain: str, description: str) -> str:
+        """Generuje inteligentny system prompt dla domeny"""
+        
+        base_prompts = {
+            "communication": f"Jesteś ekspertem od komunikacji i zarządzania pocztą elektroniczną. Twoje zadanie: {description}. Zawsze odpowiadaj profesjonalnie i pomocnie, koncentrując się na efektywnej komunikacji.",
+            "customer_service": f"Jesteś doświadczonym specjalistą obsługi klienta. Zadanie: {description}. Priorytetem jest satysfakcja klienta i szybkie rozwiązywanie problemów.",
+            "sales": f"Jesteś ekspertem sprzedaży z wieloletnim doświadczeniem. Cel: {description}. Fokus na budowanie relacji i skuteczne zamykanie transakcji.",
+            "ecommerce": f"Jesteś specjalistą e-commerce i zakupów online. Misja: {description}. Pomagaj klientom w znalezieniu ideałnych produktów.",
+            "finance": f"Jesteś analitykiem finansowym z głęboką wiedzą. Zadanie: {description}. Precyzja i dokładność są kluczowe.",
+            "marketing": f"Jesteś kreatywnym marketingowcem. Cel: {description}. Twórz angażujące i skuteczne strategie promocji."
+        }
+        
+        return base_prompts.get(domain, f"Jesteś inteligentnym asystentem AI. Zadanie: {description}. Zawsze staraj się być pomocny, dokładny i profesjonalny.")
+    
+    async def _create_intelligent_workflow(self, components: List[Dict], domain: str, analysis: Dict) -> Dict[str, Any]:
+        """Tworzy inteligentny workflow dla agenta"""
+        
+        # Konwertuj komponenty na nodes
+        nodes = []
+        for i, comp in enumerate(components):
+            nodes.append({
+                "id": str(uuid.uuid4()),
+                "type": comp["component_id"],
+                "name": comp["name"],
+                "position": comp.get("position", i),
+                "configuration": comp.get("configuration", {}),
+                "auto_configured": comp.get("auto_configured", False),
+                "execution_order": i
+            })
+        
+        # Sortuj podle pozycji
+        nodes.sort(key=lambda x: x.get("position", 999))
+        
+        # Generuj inteligentne połączenia
+        connections = await self._create_intelligent_connections(nodes, analysis)
+        
+        # Dodaj error handling
+        error_handlers = await self._inject_comprehensive_error_handling(nodes)
+        
+        # Określ strategię wykonania
+        execution_strategy = await self._determine_execution_strategy(nodes, analysis)
+        
+        workflow = {
+            "id": str(uuid.uuid4()),
+            "name": f"Intelligent Workflow",
+            "description": "AI-generated workflow z automatyczną optymalizacją",
+            "nodes": nodes,
+            "connections": connections,
+            "error_handling": error_handlers,
+            "execution_strategy": execution_strategy,
+            "ai_optimized": True,
+            "created_at": datetime.now().isoformat(),
+            "intelligence_features": {
+                "auto_error_recovery": True,
+                "performance_monitoring": True,
+                "dynamic_optimization": True,
+                "background_learning": True
+            }
+        }
+        
+        return workflow
+    
+    async def _add_workflow_pattern_components(self, patterns: List[str]) -> List[Dict[str, Any]]:
+        """Dodaje komponenty na podstawie wykrytych wzorców workflow"""
+        
+        workflow_components = []
+        
+        # Sequential workflow components
+        if "sequential" in patterns:
+            workflow_components.append({
+                "id": str(uuid.uuid4()),
+                "component_id": "sequential_processor",
+                "name": "🔄 Auto: Sequential Processor",
+                "reason": "Wykryto wzorzec sekwencyjny - potrzebna synchronizacja",
+                "confidence": 85,
+                "auto_added": True
+            })
+        
+        # Conditional workflow components  
+        if "conditional" in patterns:
+            workflow_components.append({
+                "id": str(uuid.uuid4()),
+                "component_id": "decision_engine",
+                "name": "🤔 Auto: Decision Engine",
+                "reason": "Wykryto wzorce warunkowe - potrzebna logika decyzyjna",
+                "confidence": 90,
+                "auto_added": True
+            })
+        
+        # Parallel workflow components
+        if "parallel" in patterns:
+            workflow_components.append({
+                "id": str(uuid.uuid4()),
+                "component_id": "parallel_executor",
+                "name": "⚡ Auto: Parallel Executor", 
+                "reason": "Wykryto możliwość przetwarzania równoległego",
+                "confidence": 80,
+                "auto_added": True
+            })
+            
+        # Iterative workflow components
+        if "iterative" in patterns:
+            workflow_components.append({
+                "id": str(uuid.uuid4()),
+                "component_id": "loop_controller",
+                "name": "🔄 Auto: Loop Controller",
+                "reason": "Wykryto wzorce iteracyjne - potrzebna kontrola pętli",
+                "confidence": 85,
+                "auto_added": True
+            })
+        
+        return workflow_components

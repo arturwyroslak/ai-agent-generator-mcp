@@ -12,46 +12,59 @@ class SmartContext:
         self.component_performance = {}
         self.domain_insights = {}
         
-    async def get_smart_component_suggestions(self, description: str, domain: str) -> List[str]:
+    async def get_smart_component_suggestions(self, description: str, domain: str, 
+                                            existing_component_ids: List[str] = None) -> List[Dict[str, Any]]:
         """Inteligentne sugestie komponentów na podstawie opisu i domeny"""
+        if existing_component_ids is None:
+            existing_component_ids = []
+            
         suggestions = []
         
         # Podstawowe sugestie na podstawie słów kluczowych
         keywords = description.lower().split()
         
         if any(word in keywords for word in ['chat', 'conversation', 'talk', 'rozmowa', 'czat']):
-            suggestions.extend(['openai_api_integration', 'chat_interface', 'conversation_memory'])
+            suggestions.extend([
+                {'component_id': 'llm_text_generator', 'reason': 'Conversation needs LLM', 'confidence': 90},
+                {'component_id': 'chat_interface', 'reason': 'Chat functionality', 'confidence': 85},
+                {'component_id': 'conversation_memory', 'reason': 'Context retention', 'confidence': 80}
+            ])
             
-        if any(word in keywords for word in ['email', 'mail', 'wiadomość', 'newsletter']):
-            suggestions.extend(['gmail_integration', 'sendgrid_integration', 'email_template'])
+        if any(word in keywords for word in ['email', 'mail', 'wiadomość', 'newsletter', 'poczta']):
+            suggestions.extend([
+                {'component_id': 'gmail_integration', 'reason': 'Gmail email handling', 'confidence': 90},
+                {'component_id': 'sendgrid_integration', 'reason': 'Bulk email sending', 'confidence': 85},
+                {'component_id': 'email_template_manager', 'reason': 'Template management', 'confidence': 80}
+            ])
             
         if any(word in keywords for word in ['calendar', 'schedule', 'kalendarz', 'terminarz']):
-            suggestions.extend(['google_calendar_integration', 'scheduling_system'])
-            
-        if any(word in keywords for word in ['file', 'document', 'plik', 'dokument']):
-            suggestions.extend(['file_manager', 'google_drive_integration', 'pdf_processor'])
-            
-        if any(word in keywords for word in ['database', 'data', 'baza', 'dane']):
-            suggestions.extend(['database_connector', 'data_processor', 'csv_handler'])
-            
-        if any(word in keywords for word in ['web', 'website', 'scraping', 'internet']):
-            suggestions.extend(['web_scraper', 'url_processor', 'selenium_automation'])
-            
-        # Sugestie specyficzne dla domeny
-        domain_specific = {
-            'customer_service': ['ticket_system', 'knowledge_base', 'chat_support'],
-            'e-commerce': ['payment_processor', 'inventory_manager', 'order_tracker'],
-            'marketing': ['social_media_integration', 'analytics_tracker', 'campaign_manager'],
-            'finance': ['expense_tracker', 'invoice_generator', 'accounting_integration'],
-            'education': ['learning_manager', 'quiz_system', 'progress_tracker'],
-            'healthcare': ['appointment_scheduler', 'patient_manager', 'health_tracker']
-        }
+            suggestions.extend([
+                {'component_id': 'google_calendar_integration', 'reason': 'Calendar access', 'confidence': 90},
+                {'component_id': 'scheduling_system', 'reason': 'Appointment scheduling', 'confidence': 85}
+            ])
         
-        if domain in domain_specific:
-            suggestions.extend(domain_specific[domain])
-            
-        # Usuń duplikaty i ogranicz liczbę
-        return list(set(suggestions))[:10]
+        # Filter out existing components
+        filtered_suggestions = [s for s in suggestions if s['component_id'] not in existing_component_ids]
+        
+        # Return max 10 suggestions
+        return filtered_suggestions[:10]
+    
+    async def get_intelligence_insights(self) -> Dict[str, Any]:
+        """Zwraca aktualne insights AI"""
+        return {
+            "learned_patterns": list(self.learned_patterns.keys()),
+            "success_metrics": {
+                "total_patterns": len(self.learned_patterns),
+                "component_performance_count": len(self.component_performance)
+            },
+            "optimization_suggestions": [
+                "Use components with high success rates",
+                "Learn from successful agent patterns",
+                "Optimize based on domain-specific insights"
+            ],
+            "background_intelligence": "Active",
+            "status": "full"
+        }
     
     async def learn_from_successful_agent(self, agent: Dict[str, Any]):
         """Uczenie się z udanych agentów"""

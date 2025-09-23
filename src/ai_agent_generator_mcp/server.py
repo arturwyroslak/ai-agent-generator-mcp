@@ -105,7 +105,7 @@ def create_server():
         complexity: str = "medium",
         ctx: Context = None
     ) -> str:
-        """🤖 ENHANCED: Tworzy inteligentnego agenta AI z automatyczną analizą NLP i wykrywaniem ukrytych wymagań"""
+        """🤖 ENHANCED: Tworzy inteligentnego agenta AI z automatyczną analizą NLP, wykrywaniem wymagań i generowaniem interfejsu chatu"""
         try:
             # Get session configuration
             config = ctx.session_config if ctx else None
@@ -117,25 +117,30 @@ def create_server():
                     domain=domain,
                     complexity=complexity
                 )
+                
+                # Add success message with specific guidance based on result
+                if result.get("success") and result.get("chat_interface", {}).get("generated"):
+                    result["message"] = f"🎉 Agent '{name}' został pomyślnie utworzony z pełną automatyczną konfiguracją! Interfejs chatu HTML jest gotowy do pobrania i testów."
+                    result["ready_to_use"] = True
+                elif result.get("success"):
+                    result["message"] = f"✅ Agent '{name}' został utworzony z zaawansowaną inteligencją AI. Interfejs chatu można wygenerować osobno."
+                    result["ready_to_use"] = True
+                    
             else:
-                # Basic fallback implementation
+                # This should not happen in production, but provide fallback
                 import uuid
                 from datetime import datetime
                 
                 agent_id = str(uuid.uuid4())
                 result = {
-                    "success": True,
-                    "agent_id": agent_id,
-                    "message": f"Basic agent '{name}' created successfully",
-                    "basic_mode": True,
-                    "agent": {
-                        "id": agent_id,
-                        "name": name,
-                        "description": description,
-                        "domain": domain,
-                        "complexity": complexity,
-                        "created_at": datetime.now().isoformat(),
-                        "status": "basic"
+                    "success": False,
+                    "error": "Advanced agent manager not available. Please check server configuration.",
+                    "agent_id": None,
+                    "ready_to_use": False,
+                    "troubleshooting": {
+                        "issue": "Enhanced AI components not loaded",
+                        "solution": "Restart server or check import dependencies",
+                        "fallback": "Manual component configuration required"
                     }
                 }
             
@@ -144,7 +149,11 @@ def create_server():
             return json.dumps({
                 "success": False,
                 "error": str(e),
-                "ai_analysis": "Failed to analyze agent requirements"
+                "ai_analysis": "Failed to analyze agent requirements",
+                "troubleshooting": {
+                    "error_type": type(e).__name__,
+                    "suggestion": "Check server logs for detailed error information"
+                }
             }, indent=2, ensure_ascii=False)
 
     @server.tool()
@@ -237,11 +246,14 @@ def create_server():
                 )
             else:
                 result = {
-                    "success": True,
+                    "success": False,
+                    "error": "Component manager not available. Please check server configuration.",
                     "components": [],
                     "total_count": 0,
-                    "basic_mode": True,
-                    "message": "Component management not available in basic mode"
+                    "troubleshooting": {
+                        "issue": "Enhanced component system not loaded",
+                        "solution": "Restart server or check import dependencies"
+                    }
                 }
             return json.dumps(result, indent=2, ensure_ascii=False)
         except Exception as e:
@@ -266,8 +278,11 @@ def create_server():
             else:
                 result = {
                     "success": False,
-                    "error": "Component addition not available in basic mode",
-                    "basic_mode": True
+                    "error": "Component addition not available - agent manager not initialized",
+                    "troubleshooting": {
+                        "issue": "Enhanced agent management system not loaded",
+                        "solution": "Restart server or check import dependencies"
+                    }
                 }
             return json.dumps(result, indent=2, ensure_ascii=False)
         except Exception as e:
@@ -284,13 +299,13 @@ def create_server():
     ) -> str:
         """💬 Generuje responsywny interfejs czatu HTML5 z zaawansowanymi funkcjami"""
         try:
-            if workflow_manager:
-                result = await workflow_manager.generate_chat_interface(agent_id, theme)
+            if deployer:
+                result = await deployer.generate_chat_interface(agent_id, theme)
             else:
                 result = {
                     "success": False,
-                    "error": "Chat interface generation not available in basic mode",
-                    "basic_mode": True
+                    "error": "Chat interface generation not available - deployer not initialized",
+                    "fallback_available": False
                 }
             return json.dumps(result, indent=2, ensure_ascii=False)
         except Exception as e:
