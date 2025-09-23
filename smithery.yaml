@@ -1,1 +1,9 @@
-runtime: "python"
+startCommand:
+  type: stdio
+  configSchema: {}
+  commandFunction: |-
+    (config) => ({
+      command: 'python',
+      args: ['-m', 'src.server'],
+      cwd: process.cwd()
+    })
