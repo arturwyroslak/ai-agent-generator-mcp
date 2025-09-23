@@ -540,7 +540,7 @@ class EnhancedAgentManager:
                 enhancements.append("Uwzględniaj czynniki czasowe i terminy w swoich rekomendacjach.")
         
         # Na podstawie workflow patterns
-        for pattern in analysis["workflow_patterns"]::
+        for pattern in analysis["workflow_patterns"]:
             if pattern == "conditional":
                 enhancements.append("Zadawaj pytania uściślające gdy potrzebujesz więcej kontekstu.")
             elif pattern == "sequential":

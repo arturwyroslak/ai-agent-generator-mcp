@@ -547,7 +547,7 @@ async def main():
     """Uruchomienie serwera z FULL ENHANCED FEATURES"""
     print("🚀 INICJALIZACJA MCP SERWERÓW Z ENHANCED AI...")
     
-    server = MCPAgentCreatorServer()
+    mcp_server = MCPAgentCreatorServer()
     
     print("\n🎆 SERWER MCP GOTOWY Z ADVANCED INTELLIGENCE!")
     print("🤖 Enhanced Features AKTYWNE:")
@@ -562,6 +562,12 @@ async def main():
     print("\n📊 500+ komponentów gotowych do użycia!")
     print("🎯 Wszystkie narzędzia MCP wzbogacone o AI!")
     print("\n✅ SERWER GOTOWY DO PRACY Z FULL INTELLIGENCE!")
+    
+    # Import and run the MCP server
+    from mcp.server.stdio import stdio_server
+    async with stdio_server() as (read_stream, write_stream):
+        await mcp_server.server.run(read_stream, write_stream, 
+                                   mcp_server.server.create_initialization_options())
 
 if __name__ == "__main__":
     import uuid

@@ -84,7 +84,7 @@ def get_workflow_templates():
                     "type": "sentiment_analyzer",
                     "name": "Analiza Emocji",
                     "config": {
-                        "detect_frustration": true
+                        "detect_frustration": True
                     }
                 },
                 {
@@ -133,8 +133,8 @@ def get_workflow_templates():
                     "type": "hubspot_integration",
                     "name": "Integracja CRM",
                     "config": {
-                        "auto_create_contacts": true,
-                        "track_interactions": true
+                        "auto_create_contacts": True,
+                        "track_interactions": True
                     }
                 },
                 {
@@ -142,7 +142,7 @@ def get_workflow_templates():
                     "name": "Generator Followup",
                     "config": {
                         "template_type": "sales_followup",
-                        "personalization": true
+                        "personalization": True
                     }
                 }
             ]
@@ -167,7 +167,7 @@ def get_workflow_templates():
                     "type": "lead_scorer",
                     "name": "System Scoring",
                     "config": {
-                        "bant_criteria": true,
+                        "bant_criteria": True,
                         "custom_scoring": {
                             "budget_weight": 0.3,
                             "timeline_weight": 0.25,
@@ -207,8 +207,8 @@ def get_workflow_templates():
                     "type": "seo_optimizer",
                     "name": "Optymalizator SEO",
                     "config": {
-                        "target_keywords": true,
-                        "readability_check": true
+                        "target_keywords": True,
+                        "readability_check": True
                     }
                 },
                 {
@@ -216,7 +216,7 @@ def get_workflow_templates():
                     "name": "Manager Social Media",
                     "config": {
                         "platforms": ["facebook", "linkedin", "twitter"],
-                        "optimal_timing": true
+                        "optimal_timing": True
                     }
                 }
             ]
@@ -244,16 +244,16 @@ def get_workflow_templates():
                     "name": "Skaner Bezpieczeństwa",
                     "config": {
                         "vulnerability_db": "latest",
-                        "scan_dependencies": true
+                        "scan_dependencies": True
                     }
                 },
                 {
                     "type": "github_integration",
                     "name": "Integracja GitHub",
                     "config": {
-                        "auto_comment": true,
-                        "create_issues": true,
-                        "pr_analysis": true
+                        "auto_comment": True,
+                        "create_issues": True,
+                        "pr_analysis": True
                     }
                 },
                 {
@@ -261,7 +261,7 @@ def get_workflow_templates():
                     "name": "Powiadomienia Dev",
                     "config": {
                         "channel": "#code-review",
-                        "critical_alerts": true
+                        "critical_alerts": True
                     }
                 }
             ]
@@ -279,7 +279,7 @@ def get_workflow_templates():
                     "name": "Eksplainer Kodu",
                     "config": {
                         "explanation_level": "intermediate",
-                        "include_examples": true
+                        "include_examples": True
                     }
                 },
                 {
@@ -294,8 +294,8 @@ def get_workflow_templates():
                     "type": "github_integration",
                     "name": "GitHub Docs",
                     "config": {
-                        "auto_update_readme": true,
-                        "generate_api_docs": true
+                        "auto_update_readme": True,
+                        "generate_api_docs": True
                     }
                 }
             ]
@@ -315,7 +315,7 @@ def get_workflow_templates():
                     "name": "Procesor Danych",
                     "config": {
                         "analysis_types": ["trend", "correlation", "anomaly"],
-                        "statistical_tests": true
+                        "statistical_tests": True
                     }
                 },
                 {
@@ -323,7 +323,7 @@ def get_workflow_templates():
                     "name": "Predykcja",
                     "config": {
                         "forecasting_horizon": "30_days",
-                        "confidence_intervals": true
+                        "confidence_intervals": True
                     }
                 },
                 {
@@ -331,7 +331,7 @@ def get_workflow_templates():
                     "name": "Generator Raportów",
                     "config": {
                         "report_format": "executive",
-                        "include_charts": true
+                        "include_charts": True
                     }
                 },
                 {
@@ -364,8 +364,8 @@ def get_workflow_templates():
                     "type": "market_analyzer",
                     "name": "Analiza Rynku",
                     "config": {
-                        "competitive_analysis": true,
-                        "trend_detection": true
+                        "competitive_analysis": True,
+                        "trend_detection": True
                     }
                 },
                 {
@@ -373,7 +373,7 @@ def get_workflow_templates():
                     "name": "Dashboard Power BI",
                     "config": {
                         "auto_refresh": "hourly",
-                        "real_time_data": true
+                        "real_time_data": True
                     }
                 }
             ]
@@ -400,17 +400,17 @@ def get_workflow_templates():
                     "type": "text_analyzer",
                     "name": "Analizator CV",
                     "config": {
-                        "extract_skills": true,
-                        "experience_analysis": true,
-                        "education_parsing": true
+                        "extract_skills": True,
+                        "experience_analysis": True,
+                        "education_parsing": True
                     }
                 },
                 {
                     "type": "linkedin_integration",
                     "name": "LinkedIn Recruiter",
                     "config": {
-                        "candidate_search": true,
-                        "profile_analysis": true
+                        "candidate_search": True,
+                        "profile_analysis": True
                     }
                 },
                 {
@@ -418,7 +418,7 @@ def get_workflow_templates():
                     "name": "Planowanie Rozmów",
                     "config": {
                         "interview_types": ["phone_screen", "technical", "final"],
-                        "auto_scheduling": true
+                        "auto_scheduling": True
                     }
                 }
             ]
@@ -449,15 +449,15 @@ def get_workflow_templates():
                     "name": "Generator Emaili Powitalnych",
                     "config": {
                         "template_type": "welcome",
-                        "personalization": true
+                        "personalization": True
                     }
                 },
                 {
                     "type": "slack_integration",
                     "name": "Integracja Slack",
                     "config": {
-                        "auto_add_channels": true,
-                        "welcome_message": true
+                        "auto_add_channels": True,
+                        "welcome_message": True
                     }
                 }
             ]
@@ -477,7 +477,7 @@ def get_workflow_templates():
                     "name": "Analizator Finansowy",
                     "config": {
                         "financial_metrics": ["roi", "cash_flow", "profit_margin"],
-                        "trend_analysis": true
+                        "trend_analysis": True
                     }
                 },
                 {
@@ -492,8 +492,8 @@ def get_workflow_templates():
                     "type": "quickbooks_integration",
                     "name": "QuickBooks Data",
                     "config": {
-                        "sync_transactions": true,
-                        "generate_reports": true
+                        "sync_transactions": True,
+                        "generate_reports": True
                     }
                 },
                 {
@@ -518,7 +518,7 @@ def get_workflow_templates():
                     "name": "Klasyfikator Wydatków",
                     "config": {
                         "categories": ["travel", "office", "marketing", "software", "misc"],
-                        "auto_learning": true
+                        "auto_learning": True
                     }
                 },
                 {
@@ -526,15 +526,15 @@ def get_workflow_templates():
                     "name": "Walidator Danych",
                     "config": {
                         "required_fields": ["amount", "date", "vendor"],
-                        "amount_limits": true
+                        "amount_limits": True
                     }
                 },
                 {
                     "type": "gmail_integration",
                     "name": "Email Receipts",
                     "config": {
-                        "auto_extract_receipts": true,
-                        "vendor_detection": true
+                        "auto_extract_receipts": True,
+                        "vendor_detection": True
                     }
                 }
             ]
@@ -561,16 +561,16 @@ def get_workflow_templates():
                     "type": "shopify_integration",
                     "name": "Integracja Shopify",
                     "config": {
-                        "inventory_sync": true,
-                        "order_processing": true
+                        "inventory_sync": True,
+                        "order_processing": True
                     }
                 },
                 {
                     "type": "stripe_integration",
                     "name": "Płatności Stripe",
                     "config": {
-                        "payment_processing": true,
-                        "fraud_detection": true
+                        "payment_processing": True,
+                        "fraud_detection": True
                     }
                 },
                 {
@@ -595,7 +595,7 @@ def get_workflow_templates():
                     "name": "Prognoza Popytu",
                     "config": {
                         "forecast_horizon": "90_days",
-                        "seasonal_adjustment": true
+                        "seasonal_adjustment": True
                     }
                 },
                 {
@@ -603,15 +603,15 @@ def get_workflow_templates():
                     "name": "Alerts Manager",
                     "config": {
                         "low_stock_threshold": 10,
-                        "reorder_point_calculation": true
+                        "reorder_point_calculation": True
                     }
                 },
                 {
                     "type": "shopify_integration",
                     "name": "Inventory Sync",
                     "config": {
-                        "real_time_updates": true,
-                        "variant_tracking": true
+                        "real_time_updates": True,
+                        "variant_tracking": True
                     }
                 }
             ]
@@ -630,24 +630,24 @@ def get_workflow_templates():
                     "type": "workflow_orchestrator",
                     "name": "Orkiestrator Główny",
                     "config": {
-                        "task_scheduling": true,
-                        "retry_logic": true
+                        "task_scheduling": True,
+                        "retry_logic": True
                     }
                 },
                 {
                     "type": "conditional_router",
                     "name": "Router Zadań",
                     "config": {
-                        "task_prioritization": true,
-                        "resource_allocation": true
+                        "task_prioritization": True,
+                        "resource_allocation": True
                     }
                 },
                 {
                     "type": "zapier_integration",
                     "name": "Zapier Connector",
                     "config": {
-                        "webhook_handling": true,
-                        "multi_app_workflows": true
+                        "webhook_handling": True,
+                        "multi_app_workflows": True
                     }
                 }
             ]
@@ -665,23 +665,23 @@ def get_workflow_templates():
                     "name": "Multi-Channel Sender",
                     "config": {
                         "channels": ["email", "sms", "slack", "teams"],
-                        "smart_routing": true
+                        "smart_routing": True
                     }
                 },
                 {
                     "type": "scheduler",
                     "name": "Scheduler",
                     "config": {
-                        "timezone_handling": true,
-                        "delivery_optimization": true
+                        "timezone_handling": True,
+                        "delivery_optimization": True
                     }
                 },
                 {
                     "type": "rate_limiter",
                     "name": "Rate Controller",
                     "config": {
-                        "prevent_spam": true,
-                        "user_preferences": true
+                        "prevent_spam": True,
+                        "user_preferences": True
                     }
                 }
             ]
@@ -701,31 +701,31 @@ def get_workflow_templates():
                     "name": "Analiza Sentymentu",
                     "config": {
                         "platforms": ["twitter", "facebook", "instagram"],
-                        "brand_mentions": true
+                        "brand_mentions": True
                     }
                 },
                 {
                     "type": "facebook_integration",
                     "name": "Facebook Manager",
                     "config": {
-                        "post_scheduling": true,
-                        "engagement_tracking": true
+                        "post_scheduling": True,
+                        "engagement_tracking": True
                     }
                 },
                 {
                     "type": "twitter_integration",
                     "name": "Twitter Manager",
                     "config": {
-                        "trend_monitoring": true,
-                        "hashtag_research": true
+                        "trend_monitoring": True,
+                        "hashtag_research": True
                     }
                 },
                 {
                     "type": "content_generator",
                     "name": "Content Creator",
                     "config": {
-                        "platform_optimization": true,
-                        "viral_potential_scoring": true
+                        "platform_optimization": True,
+                        "viral_potential_scoring": True
                     }
                 }
             ]
@@ -743,23 +743,23 @@ def get_workflow_templates():
                     "name": "Skaner Zagrożeń",
                     "config": {
                         "scan_frequency": "continuous",
-                        "threat_intelligence": true
+                        "threat_intelligence": True
                     }
                 },
                 {
                     "type": "fraud_detector",
                     "name": "Detektor Anomalii",
                     "config": {
-                        "ml_models": true,
-                        "behavioral_analysis": true
+                        "ml_models": True,
+                        "behavioral_analysis": True
                     }
                 },
                 {
                     "type": "conditional_router",
                     "name": "Incident Response",
                     "config": {
-                        "severity_escalation": true,
-                        "auto_mitigation": true
+                        "severity_escalation": True,
+                        "auto_mitigation": True
                     }
                 },
                 {
@@ -767,7 +767,7 @@ def get_workflow_templates():
                     "name": "Security Alerts",
                     "config": {
                         "channel": "#security-incidents",
-                        "escalation_matrix": true
+                        "escalation_matrix": True
                     }
                 }
             ]
