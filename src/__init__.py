@@ -7,6 +7,6 @@ with intelligent background processing and advanced component system.
 __version__ = "1.0.0"
 __author__ = "AI Agent Generator MCP"
 
-from .server import MCPAgentCreatorServer
+from .server import create_server
 
-__all__ = ["MCPAgentCreatorServer"]
+__all__ = ["create_server"]

@@ -1,14 +1,1 @@
-# Smithery.ai configuration file: https://smithery.ai/docs/config#smitheryyaml
-
-startCommand:
-  type: stdio
-  configSchema:
-    {}
-  commandFunction:
-    # A function that produces the CLI command to start the MCP on stdio.
-    |-
-    (config) => ({
-      command: 'python',
-      args: ['-m', 'src.server'],
-      cwd: process.cwd()
-    })
+runtime: "python"
