@@ -8,11 +8,48 @@ from datetime import datetime
 # Use absolute imports to avoid issues
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from components import get_all_available_components
-from utils.smart_context import get_smart_context
-from utils.description_analyzer import get_description_analyzer
+# Add the src directory to the path for absolute imports
+current_dir = os.path.dirname(__file__)
+src_dir = os.path.dirname(current_dir)
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
+
+try:
+    from components import get_all_available_components
+    from utils.smart_context import get_smart_context
+    from utils.description_analyzer import get_description_analyzer
+except ImportError as e:
+    # Fallback for when modules are not found
+    print(f"Warning: Could not import some modules: {e}")
+    
+    def get_all_available_components():
+        """Fallback components function"""
+        return {}
+    
+    class SmartContext:
+        """Fallback SmartContext class"""
+        async def get_smart_component_suggestions(self, description: str, domain: str, existing_component_ids=None):
+            return []
+        async def get_intelligence_insights(self):
+            return {"learned_patterns": [], "success_metrics": {}}
+        async def get_domain_insights(self, domain: str):
+            return {"patterns": [], "recommendations": []}
+            
+    class DescriptionAnalyzer:
+        """Fallback DescriptionAnalyzer class"""
+        async def analyze_description(self, description: str, domain: str = "general"):
+            return {"requirements": [], "patterns": [], "complexity": "medium"}
+        async def detect_implicit_requirements(self, description: str):
+            return []
+    
+    def get_smart_context():
+        """Fallback smart context function"""
+        return SmartContext()
+    
+    def get_description_analyzer():
+        """Fallback description analyzer function"""
+        return DescriptionAnalyzer()
 
 class EnhancedAgentManager:
     """Ulepszony AgentManager z inteligentną analizą i automatyczną optymalizacją działającą w tle"""
