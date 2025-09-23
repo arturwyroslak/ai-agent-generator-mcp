@@ -1,0 +1,5 @@
+# MCP Server dependencies
+mcp>=1.0.0
+
+# Python standard library dependencies are included
+# asyncio, json, typing, uuid, datetime, base64, re, math
