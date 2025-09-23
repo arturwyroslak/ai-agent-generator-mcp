@@ -3,7 +3,7 @@ requires = ["uv_build>=0.8.15,<0.9.0"]
 build-backend = "uv_build"
 
 [project]
-name = "ai-agent-generator-mcp"
+name = "ai_agent_generator_mcp"
 version = "1.0.0"
 description = "MCP Server that enables AI to create other AI agents through natural language"
 authors = [{name = "AI Agent Generator MCP", email = "contact@example.com"}]
