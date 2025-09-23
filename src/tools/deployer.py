@@ -17,17 +17,16 @@ class AgentDeployer:
         agent_description = "Inteligentny asystent AI"
         
         try:
-            # Check if we can access agent manager to get agent details
-            import sys
-            if 'enhanced_agent_manager' in sys.modules:
-                from . import enhanced_agent_manager
-                manager = enhanced_agent_manager.EnhancedAgentManager()
-                if agent_id in manager.agents:
-                    agent = manager.agents[agent_id]
-                    agent_name = agent.get("name", agent_name)
-                    agent_type = agent.get("domain", "general")
-                    agent_description = agent.get("description", agent_description)
-        except:
+            # Access the enhanced agent manager through the class variable if available
+            from .enhanced_agent_manager import EnhancedAgentManager
+            temp_manager = EnhancedAgentManager()
+            if agent_id in temp_manager.agents:
+                agent = temp_manager.agents[agent_id]
+                agent_name = agent.get("name", agent_name)
+                agent_type = agent.get("domain", "general")
+                agent_description = agent.get("description", agent_description)
+        except Exception as e:
+            print(f"⚠️ Could not access agent details: {e}")
             pass
         
         # Customize interface based on agent type

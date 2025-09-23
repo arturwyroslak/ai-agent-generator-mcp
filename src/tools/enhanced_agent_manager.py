@@ -156,6 +156,7 @@ class EnhancedAgentManager:
             "success": True,
             "agent_id": agent_id,
             "message": f"Agent '{name}' został utworzony z zaawansowaną inteligencją AI i gotowym interfejsem chatu",
+            "ready_to_use": True,
             "agent": {
                 "id": agent_id,
                 "name": name,

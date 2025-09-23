@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface - Agent 413d1552</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .chat-container { 
+            width: 90%;
+            max-width: 800px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        .chat-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+        }
+        .chat-header h1 { font-size: 1.5em; margin-bottom: 5px; }
+        .chat-header p { opacity: 0.9; font-size: 0.9em; }
+        .specialized-info {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+        }
+        .messages { 
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .message { 
+            margin: 15px 0;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .user-message { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 20px 20px 5px 20px;
+            margin-left: 20%;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        .bot-message { 
+            background: white;
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 20px 20px 20px 5px;
+            margin-right: 20%;
+            border-left: 4px solid #4facfe;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+        .message-input { 
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .message-input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+        .send-button { 
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+        }
+        .send-button:active {
+            transform: translateY(0);
+        }
+        .typing-indicator {
+            display: none;
+            padding: 10px 20px;
+            color: #666;
+            font-style: italic;
+        }
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            padding: 10px 20px;
+            flex-wrap: wrap;
+        }
+        .quick-action {
+            background: #e9ecef;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        .quick-action:hover {
+            background: #4facfe;
+            color: white;
+        }
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            background: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .chat-container { width: 95%; height: 95vh; }
+            .user-message { margin-left: 10%; }
+            .bot-message { margin-right: 10%; }
+            .input-area { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1><span class="status-indicator"></span>Agent 413d1552</h1>
+            <p>Inteligentny asystent AI</p>
+            <div class="specialized-info">
+                🤖 Uniwersalny Agent AI • Multi-domain Support • Intelligent Processing
+            </div>
+        </div>
+        
+        <div class="messages" id="messages">
+            <div class="message bot-message">
+                <strong>🤖 Agent 413d1552:</strong> Cześć! Jestem Twoim inteligentnym asystentem AI. Jestem gotowy pomóc Ci z różnymi zadaniami i projektami. O czym chcesz porozmawiać?
+            </div>
+        </div>
+        
+        <div class="quick-actions">
+            
+                <button class="quick-action" onclick="sendQuickAction('Pomoc')">❓ Pomoc</button>
+                <button class="quick-action" onclick="sendQuickAction('Funkcje')">⚡ Funkcje</button>
+                <button class="quick-action" onclick="sendQuickAction('Przykłady')">💡 Przykłady</button>
+            
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            🤖 Agent pisze odpowiedź...
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="messageInput" class="message-input" placeholder="Wpisz swoją wiadomość...">
+            <button id="sendButton" class="send-button">Wyślij</button>
+        </div>
+    </div>
+    
+    <script>
+        const responses = {{
+                    general: [
+                        "🤖 Dzięki za pytanie! Na podstawie mojej analizy AI sugeruję optymalne rozwiązanie dla Twojej sytuacji.",
+                        "💡 Przeanalizowałem Twoją sytuację. Oto co proponuję na podstawie najlepszych praktyk...",
+                        "✨ Świetne pytanie! Moja inteligentna analiza wskazuje na kilka interesujących możliwości..."
+                    ]
+                }};
+        const agentType = 'general';
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const messages = document.getElementById('messages');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const message = input.value.trim();
+            
+            if (message) {
+                // User message
+                messages.innerHTML += `<div class="message user-message"><strong>Ty:</strong> ${message}</div>`;
+                input.value = '';
+                
+                // Show typing indicator
+                typingIndicator.style.display = 'block';
+                messages.scrollTop = messages.scrollHeight;
+                
+                // Bot response (simulated with agent-specific responses)
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    const response = getAgentResponse(message, agentType);
+                    messages.innerHTML += `<div class="message bot-message"><strong>🤖 Agent 413d1552:</strong> ${response}</div>`;
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000 + Math.random() * 1000);
+            }
+        }
+        
+        function getAgentResponse(message, type) {
+            const messageLower = message.toLowerCase();
+            
+            // Agent-specific responses
+            if (type === 'communication' || type === 'email') {
+                if (messageLower.includes('email') || messageLower.includes('mail')) {
+                    return responses.email[Math.floor(Math.random() * responses.email.length)];
+                }
+                if (messageLower.includes('wysłać') || messageLower.includes('send')) {
+                    return responses.send[Math.floor(Math.random() * responses.send.length)];
+                }
+                if (messageLower.includes('śledzenie') || messageLower.includes('track')) {
+                    return responses.track[Math.floor(Math.random() * responses.track.length)];
+                }
+            }
+            
+            // General responses
+            return responses.general[Math.floor(Math.random() * responses.general.length)];
+        }
+        
+        function sendQuickAction(action) {
+            document.getElementById('messageInput').value = action;
+            sendMessage();
+        }
+        
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        document.getElementById('sendButton').addEventListener('click', sendMessage);
+        
+        // Auto-focus input
+        document.getElementById('messageInput').focus();
+    </script>
+</body>
+</html>
